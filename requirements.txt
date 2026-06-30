@@ -1,0 +1,19 @@
+# --- PyTorch ---
+# For RTX 5060 / Blackwell sm_120, install torch separately with CUDA 12.8:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu128
+# On Kaggle, torch is usually preinstalled.
+
+# --- Major TOM data stack ---
+pyarrow>=15.0
+fsspec>=2024.2.0
+huggingface_hub>=0.23.0
+rasterio>=1.3.9
+pillow>=10.0
+
+# --- Scientific stack ---
+numpy>=1.26
+pandas>=2.0
+scipy>=1.11
+matplotlib>=3.8
+pyyaml>=6.0
+tqdm>=4.66

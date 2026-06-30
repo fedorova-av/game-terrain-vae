@@ -1,0 +1,30 @@
+# Конфиг эксперимента E0 - Autoencoder 
+
+experiment_name: ae
+
+model:
+  type: ae              # ae | vae | beta_vae | cvae
+  in_channels: 1
+  image_size: 256
+  latent_dim: 128       # размер сжатого представления
+  base_channels: 32     # ширина первого свёрточного слоя
+
+data:
+  processed_dir: data/processed
+  metadata_csv: data/metadata.csv
+  return_label: false
+
+training:
+  epochs: 30
+  batch_size: 32
+  lr: 0.0002
+  optimizer: adam
+  seed: 42
+  num_workers: 4
+  device: cuda
+
+loss:
+  type: l1
+output:
+  out_dir: outputs/ae
+  save_n_samples: 16

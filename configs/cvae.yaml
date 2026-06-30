@@ -1,0 +1,50 @@
+# Conditional VAE experiment.
+# The schema follows beta-VAE configs, so train_cvae.py can reuse the same
+# logging and metrics format.
+#
+# The loss recipe follows the strongest beta-VAE setup
+# (beta_vae_final_full.yaml: beta=0.5, grad_loss_weight=0.05, latent_dim=128)
+# so the comparison isolates the effect of conditioning.
+experiment_name: cvae
+
+model:
+  type: cvae
+  in_channels: 1
+  image_size: 256
+  latent_dim: 128
+  base_channels: 32
+  channel_multipliers: [1, 2, 4, 8, 16]
+  num_classes: 3          # flat / hilly / mountain
+  class_embed_dim: 16
+  scale_embed_dim: 8
+
+data:
+  # Paths for a local or Kaggle Major TOM terrain dataset.
+  processed_dir: /kaggle/input/major-tom-terrain-data-50k/upload/processed
+  metadata_csv: /kaggle/input/major-tom-terrain-data-50k/upload/metadata.csv
+  max_train_samples:
+  max_val_samples:
+  max_test_samples:
+
+training:
+  epochs: 12
+  batch_size: 32
+  lr: 0.0002
+  weight_decay: 0.0001
+  seed: 42
+  num_workers: 2
+  device: cuda
+  use_amp: true
+  grad_clip: 1.0
+  early_stopping_patience: 5
+
+loss:
+  recon_type: mse
+  beta: 0.5
+  kl_anneal_epochs: 6
+  free_bits: 0.0
+  grad_loss_weight: 0.05
+
+output:
+  out_dir: outputs/cvae
+  save_n_samples: 12

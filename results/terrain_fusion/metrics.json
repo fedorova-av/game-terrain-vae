@@ -1,0 +1,13 @@
+{
+  "mae": 0.21047,
+  "rmse": 0.26798,
+  "gradient_mae": 0.01519,
+  "slope_diff": 0.02393,
+  "roughness_real": 0.03572,
+  "roughness_recon": 0.00483,
+  "roughness_diff": 0.03089,
+  "eval_type": "generative",
+  "n_generated": 1000,
+  "n_real": 6452,
+  "name": "terrain_fusion"
+}

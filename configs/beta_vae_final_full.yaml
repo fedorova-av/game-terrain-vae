@@ -1,0 +1,41 @@
+# Final full-data confirmation run for the beta-VAE model
+# Empty max_*_samples values use all available train/val/test tensors
+experiment_name: final_best_full_beta_0_5_grad_0_05_latent128
+
+model:
+  type: beta_vae
+  in_channels: 1
+  image_size: 256
+  latent_dim: 128
+  base_channels: 32
+  channel_multipliers: [1, 2, 4, 8, 16]
+
+data:
+  processed_dir: data/processed
+  metadata_csv: data/metadata.csv
+  max_train_samples:
+  max_val_samples:
+  max_test_samples:
+
+training:
+  epochs: 12
+  batch_size: 32
+  lr: 0.0002
+  weight_decay: 0.0001
+  seed: 42
+  num_workers: 2
+  device: cuda
+  use_amp: true
+  grad_clip: 1.0
+  early_stopping_patience: 5
+
+loss:
+  recon_type: mse
+  beta: 0.5
+  kl_anneal_epochs: 6
+  free_bits: 0.0
+  grad_loss_weight: 0.05
+
+output:
+  out_dir: outputs/final_best_full_beta_0_5_grad_0_05_latent128
+  save_n_samples: 16

@@ -1,0 +1,26 @@
+# данные
+/data/
+/upload/
+
+# веса и чекпойнты
+checkpoints/
+/runs/
+*.pt
+*.ckpt
+
+# архивы
+*.zip
+
+# python
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.venv/
+env/
+
+# демо/отладка (локально)
+data_demo/
+outputs/*_demo/
+
+# системное
+.DS_Store

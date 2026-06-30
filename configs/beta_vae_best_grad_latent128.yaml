@@ -1,0 +1,41 @@
+# Best targeted config from experiment sweeps
+# Balanced Kaggle run improved RMSE by about 18% versus beta_vae_beta_0_5 after fine-tuning
+experiment_name: beta_vae_beta_0_5_grad_0_05_latent128
+
+model:
+  type: beta_vae
+  in_channels: 1
+  image_size: 256
+  latent_dim: 128
+  base_channels: 32
+  channel_multipliers: [1, 2, 4, 8, 16]
+
+data:
+  processed_dir: data/processed
+  metadata_csv: data/metadata.csv
+  max_train_samples: 12000
+  max_val_samples: 2500
+  max_test_samples: 2500
+
+training:
+  epochs: 10
+  batch_size: 32
+  lr: 0.0002
+  weight_decay: 0.0001
+  seed: 42
+  num_workers: 2
+  device: cuda
+  use_amp: true
+  grad_clip: 1.0
+  early_stopping_patience: 5
+
+loss:
+  recon_type: mse
+  beta: 0.5
+  kl_anneal_epochs: 5
+  free_bits: 0.0
+  grad_loss_weight: 0.05
+
+output:
+  out_dir: outputs/beta_vae_beta_0_5_grad_0_05_latent128
+  save_n_samples: 16

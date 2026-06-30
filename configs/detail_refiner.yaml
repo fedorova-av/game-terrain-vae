@@ -1,0 +1,59 @@
+# DetailRefiner on top of CVAE.
+# This is a documented negative result: deterministic residual CNN refinement
+# struggles to recover stochastic high-frequency terrain texture. In generation,
+# it either collapses toward identity with pixel-dominated loss or amplifies
+# artifacts into noisy detail when gradient/roughness terms dominate. The config
+# is kept for reproducibility and as motivation for terrain-fusion refinement.
+
+experiment_name: detail_refiner
+
+stage1_cvae:
+  # trained CVAE checkpoint for structure inference
+  checkpoint: outputs/cvae/best.pt
+  config: configs/cvae.yaml
+
+refine_input:
+  # Training input for the refiner:
+  #   cvae_recon: CVAE reconstruction of the real tile, matching inference artifacts.
+  #   coarsen: Gaussian blur fallback, kept for comparison.
+  mode: cvae_recon
+
+model:
+  in_channels: 1
+  base_channels: 48
+  num_blocks: 6
+  num_classes: 3
+  use_class_cond: true
+  residual_scale: 1.0
+
+data:
+  processed_dir: data/processed
+  metadata_csv: data/metadata.csv
+  max_train_samples:
+  max_val_samples:
+  max_test_samples:
+
+coarsen:
+  # Smooth real tile to approximate VAE output when using the coarsen fallback.
+  kernel: 9
+  sigma: 1.0
+
+loss:
+  w_pixel: 1.0
+  w_grad: 1.0
+  w_rough: 0.5
+
+training:
+  epochs: 15
+  batch_size: 16
+  lr: 0.0002
+  weight_decay: 0.0001
+  seed: 42
+  num_workers: 2
+  device: cuda
+  use_amp: true
+  grad_clip: 1.0
+
+output:
+  out_dir: outputs/detail_refiner
+  save_n_samples: 16

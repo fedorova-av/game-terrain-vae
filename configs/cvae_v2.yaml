@@ -1,0 +1,57 @@
+# Эксперимент E3-v2 — Conditional VAE с усиленным scale-conditioning.
+# Отдельный прогон рядом с базовым cvae (E3), чтобы сравнить, а не подменить.
+#
+# Зачем: у базового CVAE категориальная управляемость (тип flat/hilly/mountain)
+# работает надёжно (condition-consistency), а НЕПРЕРЫВНЫЙ масштаб (scale sweep при
+# фикс. классе и z) почти не двигает рельеф. v2 усиливает именно масштабное условие.
+#
+# Отличия от configs/cvae.yaml — РОВНО два, чтобы эффект был интерпретируем:
+#   scale_embed_dim 8 -> 32   (больше ёмкости у проекции elevation_range)
+#   free_bits      0.0 -> 0.25 (не даёт KL схлопнуть масштабную ось латента)
+# Тело сети, латент, beta, grad_loss и пр. — те же, что у базового cvae и β-VAE,
+# поэтому сравнение остаётся честным.
+experiment_name: cvae_v2_strongcond
+
+model:
+  type: cvae
+  in_channels: 1
+  image_size: 256
+  latent_dim: 128
+  base_channels: 32
+  channel_multipliers: [1, 2, 4, 8, 16]
+  # --- условие ---
+  num_classes: 3          # flat / hilly / mountain
+  class_embed_dim: 16     # embedding класса рельефа (как в v1)
+  scale_embed_dim: 32     # v1=8 -> 32: усиленная проекция непрерывного масштаба
+
+data:
+  # Пути под Kaggle-датасет major-tom-terrain-data-50k. Локально поправить на свой
+  # путь (у загрузчика есть фолбэк через rglob, но лучше указать точно).
+  processed_dir: /kaggle/input/major-tom-terrain-data-50k/upload/processed
+  metadata_csv: /kaggle/input/major-tom-terrain-data-50k/upload/metadata.csv
+  max_train_samples:      # пусто = весь train split (~30k)
+  max_val_samples:
+  max_test_samples:
+
+training:
+  epochs: 12
+  batch_size: 32
+  lr: 0.0002
+  weight_decay: 0.0001
+  seed: 42
+  num_workers: 2
+  device: cuda            # cuda -> авто-падение на mps (Apple GPU) -> cpu
+  use_amp: true           # AMP включается только на CUDA; на MPS/CPU считается fp32
+  grad_clip: 1.0
+  early_stopping_patience: 5
+
+loss:
+  recon_type: mse
+  beta: 0.5               # эффективный вес KL = beta * (KL / num_pixels)
+  kl_anneal_epochs: 6     # плавный разогрев KL — декодер сначала учит реконструкцию
+  free_bits: 0.25         # v1=0.0 -> 0.25: держит активной масштабную ось латента
+  grad_loss_weight: 0.05  # L1 по градиентам против сглаживания рельефа
+
+output:
+  out_dir: outputs/cvae_v2_strongcond
+  save_n_samples: 12

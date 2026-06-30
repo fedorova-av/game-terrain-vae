@@ -1,0 +1,113 @@
+{
+  "device": "mps",
+  "n_real_per_class": 600,
+  "n_gen_per_class": 300,
+  "bvae_temp": 1.15,
+  "real_diversity": 20.66864867386901,
+  "real_means": {
+    "slope": 0.034324992016117904,
+    "rough": 0.03220753354081454,
+    "hf": 0.08706815770400889,
+    "range": 2.0
+  },
+  "table": [
+    {
+      "Model": "VAE",
+      "Mode": "recon",
+      "RMSE": 0.09107450395822525,
+      "GradMAE": 0.020120300352573395,
+      "Rough_ratio": 0.15634189603798201,
+      "HF_ratio": 0.38623474560793736,
+      "W1_slope": null,
+      "W1_rough": null,
+      "W1_hf": null,
+      "W1_range": null,
+      "Diversity": null
+    },
+    {
+      "Model": "VAE",
+      "Mode": "gen",
+      "RMSE": null,
+      "GradMAE": null,
+      "Rough_ratio": 0.16363687979516534,
+      "HF_ratio": 0.3031449183712863,
+      "W1_slope": 0.021173417903943725,
+      "W1_rough": 0.027036488407922867,
+      "W1_hf": 0.06067388814378569,
+      "W1_range": 0.7579584607813094,
+      "Diversity": 10.937743014139656
+    },
+    {
+      "Model": "\u03b2-VAE",
+      "Mode": "recon",
+      "RMSE": 0.09401450306177139,
+      "GradMAE": 0.021305371075868607,
+      "Rough_ratio": 0.7127133660002447,
+      "HF_ratio": 0.376594951561847,
+      "W1_slope": null,
+      "W1_rough": null,
+      "W1_hf": null,
+      "W1_range": null,
+      "Diversity": null
+    },
+    {
+      "Model": "\u03b2-VAE",
+      "Mode": "gen",
+      "RMSE": null,
+      "GradMAE": null,
+      "Rough_ratio": 0.8980719627637762,
+      "HF_ratio": 0.2932012355087651,
+      "W1_slope": 0.012589283367665807,
+      "W1_rough": 0.016691648709080863,
+      "W1_hf": 0.06153966629142828,
+      "W1_range": 0.20806491825315687,
+      "Diversity": 18.083642213534702
+    },
+    {
+      "Model": "CVAE",
+      "Mode": "recon",
+      "RMSE": 0.09372913837432861,
+      "GradMAE": 0.020406659692525864,
+      "Rough_ratio": 0.24943001868321613,
+      "HF_ratio": 0.38066906951936946,
+      "W1_slope": null,
+      "W1_rough": null,
+      "W1_hf": null,
+      "W1_range": null,
+      "Diversity": null
+    },
+    {
+      "Model": "CVAE",
+      "Mode": "gen",
+      "RMSE": null,
+      "GradMAE": null,
+      "Rough_ratio": 0.3550087984626849,
+      "HF_ratio": 0.30596944583360053,
+      "W1_slope": 0.01580519819160852,
+      "W1_rough": 0.02185320379772343,
+      "W1_hf": 0.060427961741254775,
+      "W1_range": 0.4354156751102871,
+      "Diversity": 14.130496485829713
+    }
+  ],
+  "class_consistency_CVAE": {
+    "slope": {
+      "flat": 0.0186,
+      "hilly": 0.0202,
+      "mountain": 0.0211,
+      "monotonic\u2191": true
+    },
+    "rough": {
+      "flat": 0.0109,
+      "hilly": 0.0114,
+      "mountain": 0.0116,
+      "monotonic\u2191": true
+    },
+    "range": {
+      "flat": 1.4876,
+      "hilly": 1.5873,
+      "mountain": 1.64,
+      "monotonic\u2191": true
+    }
+  }
+}
