@@ -1,22 +1,22 @@
 # Game Terrain VAE
 
-Generative modeling project for creating game-ready terrain heightmap tiles from DEM-style elevation data. The repository compares VAE, beta-VAE, and Conditional VAE approaches, evaluates generated terrain with geometric metrics, and includes post-processing utilities for more realistic surface detail.
+Проект по генеративному моделированию для создания game-ready тайлов карт высот рельефа из данных о высотах в стиле DEM. В репозитории сравниваются подходы VAE, beta-VAE и Conditional VAE, сгенерированный рельеф оценивается геометрическими метриками, а также есть утилиты постобработки для более реалистичной детализации поверхности.
 
-![Generated terrain examples](figures/final/mountains_gameready.png)
+![Примеры сгенерированного рельефа](figures/final/mountains_gameready.png)
 
-## Project Highlights
+## Ключевые особенности проекта
 
-- Built a PyTorch pipeline for 256 x 256 single-channel heightmap tiles.
-- Implemented AE, VAE, beta-VAE, Conditional VAE, detail refiner, and terrain-fusion experiments.
-- Added class-conditional generation for `flat`, `hilly`, and `mountain` terrain.
-- Evaluated both reconstruction quality and generative quality with terrain-aware metrics: MAE, RMSE, gradient MAE, slope difference, roughness, high-frequency energy, Wasserstein distances, and diversity.
-- Exported visual artifacts for game-oriented review: 2D heightmaps, 3D surfaces, Blender-style renders, and post-processed samples.
+- Построен PyTorch-пайплайн для одноканальных тайлов карт высот 256 x 256.
+- Реализованы эксперименты с AE, VAE, beta-VAE, Conditional VAE, detail refiner и terrain fusion.
+- Добавлена классово-условная генерация для рельефа `flat`, `hilly` и `mountain`.
+- Оценены качество реконструкции и генеративное качество terrain-aware метриками: MAE, RMSE, gradient MAE, slope difference, roughness, high-frequency energy, Wasserstein distances и diversity.
+- Экспортированы визуальные артефакты для оценки с точки зрения игр: 2D-карты высот, 3D-поверхности, рендеры в стиле Blender и сэмплы после постобработки.
 
-## Key Results
+## Ключевые результаты
 
-### Conditional VAE Reconstruction
+### Реконструкция Conditional VAE
 
-Best CVAE validation loss: **0.0143**. On the test split, CVAE reached:
+Лучший validation loss CVAE: **0.0143**. На тестовой выборке CVAE достиг:
 
 | Metric | Value |
 |---|---:|
@@ -24,10 +24,10 @@ Best CVAE validation loss: **0.0143**. On the test split, CVAE reached:
 | RMSE | 0.0950 |
 | Gradient MAE | 0.0218 |
 | Slope difference | 0.0267 |
-| Approx. MAE in meters | 11.10 m |
-| Approx. RMSE in meters | 14.78 m |
+| Прибл. MAE в метрах | 11.10 m |
+| Прибл. RMSE в метрах | 14.78 m |
 
-Per-class reconstruction:
+Реконструкция по классам:
 
 | Terrain | MAE | RMSE | Approx. MAE |
 |---|---:|---:|---:|
@@ -35,9 +35,9 @@ Per-class reconstruction:
 | Hilly | 0.0690 | 0.0942 | 7.99 m |
 | Mountain | 0.0645 | 0.0856 | 32.39 m |
 
-### Generative Evaluation
+### Генеративная оценка
 
-The generative comparison used 600 real tiles per class and 300 generated tiles per class.
+В генеративном сравнении использовалось 600 реальных тайлов на класс и 300 сгенерированных тайлов на класс.
 
 | Model | Mode | RMSE | Grad MAE | Rough ratio | HF ratio | W1 slope | W1 rough | Diversity |
 |---|---|---:|---:|---:|---:|---:|---:|---:|
@@ -48,76 +48,76 @@ The generative comparison used 600 real tiles per class and 300 generated tiles 
 | CVAE | recon | 0.0937 | 0.0204 | 0.25 | 0.38 | - | - | - |
 | CVAE | gen | - | - | 0.36 | 0.31 | 0.0158 | 0.0219 | 14.1 |
 
-beta-VAE produced the most realistic unconditional samples by roughness and distributional distance. CVAE was the best option for controllable generation: generated `flat -> hilly -> mountain` samples were monotonic by slope, roughness, and elevation range.
+beta-VAE дал наиболее реалистичные безусловные сэмплы по roughness и расстоянию между распределениями. CVAE оказался лучшим вариантом для управляемой генерации: сгенерированные сэмплы `flat -> hilly -> mountain` были монотонны по slope, roughness и диапазону высот.
 
-## Method
+## Метод
 
-The data pipeline prepares normalized DEM patches:
+Пайплайн данных готовит нормализованные DEM-патчи:
 
-- tensor format: `[N, 1, 256, 256]`;
-- normalization: per-patch min-max to `[-1, 1]`;
-- metadata: terrain class, elevation range, slope statistics, original min/max elevation;
-- controllable labels: `flat`, `hilly`, `mountain`.
+- формат тензора: `[N, 1, 256, 256]`;
+- нормализация: per-patch min-max в `[-1, 1]`;
+- метаданные: класс рельефа, диапазон высот, статистика уклонов, исходные min/max высоты;
+- управляемые метки: `flat`, `hilly`, `mountain`.
 
-The CVAE conditions the encoder and decoder on terrain class and normalized elevation range. A gradient-aware reconstruction loss helps preserve terrain structure, while post-processing operations such as erosion, thermal smoothing, power transforms, and warping improve game-readiness.
+CVAE кондиционирует энкодер и декодер на класс рельефа и нормализованный диапазон высот. Gradient-aware reconstruction loss помогает сохранить структуру рельефа, а операции постобработки — эрозия, термальное сглаживание, степенные преобразования и warping — повышают game-readiness.
 
-## Repository Structure
+## Структура репозитория
 
 ```text
 .
-├── configs/              # Experiment configs
-├── figures/final/        # Selected final visualizations
-├── outputs/cvae/         # CVAE metrics and sample grid
-├── results/              # Evaluation tables and comparison figures
+├── configs/              # конфиги экспериментов
+├── figures/final/        # отобранные финальные визуализации
+├── outputs/cvae/         # метрики CVAE и сетка сэмплов
+├── results/              # таблицы оценки и сравнительные графики
 ├── src/
-│   ├── data/             # Dataset preparation and terrain labeling
-│   ├── evaluation/       # Reconstruction and generative metrics
+│   ├── data/             # подготовка датасета и разметка рельефа
+│   ├── evaluation/       # метрики реконструкции и генерации
 │   ├── models/           # AE, VAE, beta-VAE, CVAE, refiner, terrain fusion
-│   ├── postprocess/      # Terrain enhancement operators
-│   ├── training/         # Training entrypoints and losses
-│   └── visualization/    # Heightmap and 3D rendering utilities
+│   ├── postprocess/      # операторы улучшения рельефа
+│   ├── training/         # точки входа обучения и лоссы
+│   └── visualization/    # утилиты карт высот и 3D-рендеринга
 └── requirements.txt
 ```
 
-## Quick Start
+## Быстрый старт
 
-Install dependencies:
+Установка зависимостей:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Prepare a local dataset:
+Подготовка локального датасета:
 
 ```bash
 python -m src.data.prepare_dataset \
   --config configs/cvae.yaml
 ```
 
-Train CVAE:
+Обучение CVAE:
 
 ```bash
 python -m src.training.train_cvae \
   --config configs/cvae.yaml
 ```
 
-Run evaluation:
+Запуск оценки:
 
 ```bash
 python -m src.evaluation.eval_models \
   --config configs/cvae.yaml
 ```
 
-Generate examples:
+Генерация примеров:
 
 ```bash
 python -m src.visualization.generate_examples \
   --config configs/cvae.yaml
 ```
 
-## Data And Artifacts
+## Данные и артефакты
 
-Raw DEM data and model checkpoints are intentionally not committed. The repository keeps code, configs, selected metrics, and lightweight visual artifacts. Large local files are ignored by `.gitignore`:
+Исходные DEM-данные и чекпойнты моделей намеренно не хранятся в репозитории. В репозитории остаются код, конфиги, отобранные метрики и лёгкие визуальные артефакты. Большие локальные файлы игнорируются через `.gitignore`:
 
 - `data/`
 - `checkpoints/`
@@ -125,6 +125,6 @@ Raw DEM data and model checkpoints are intentionally not committed. The reposito
 - `*.pt`
 - `*.ckpt`
 
-## Tech Stack
+## Стек технологий
 
 `Python` · `PyTorch` · `NumPy` · `pandas` · `SciPy` · `Matplotlib` · `PyYAML` · `rasterio` · `DEM processing` · `Generative Modeling`
